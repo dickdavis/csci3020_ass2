@@ -4,7 +4,7 @@ CSCI 3020 Section W1
 Fall 2015
 Assignment 2
 Programmed on Arch Linux (kernel version 4.1.6-1-ARCH) using g++ (v5.2.0)
-This program converts a legacy text file to an XML document
+This program converts a legacy csv file to an XML document
 *******************/
 
 #include <fstream>
