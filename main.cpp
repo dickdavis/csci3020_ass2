@@ -27,29 +27,36 @@ struct Country {
     std::string name;
     std::string region;
     std::string code;
-    City cities[5];
+    City cities[500];
+    int cityCount;
 };
 
 struct Countries {
-    Country countries[10];
+    Country countries[200];
+    int countryCount;
 };
 
 // prototypes for the functions
 void userInput(std::string &, std::string &);
-void fileRead(std::string, Countries &);
+bool fileRead(std::string, Countries &);
 void fileWrite(std::string, Countries);
 
 // where the magic happens
 int main() {
     std::string ifile_name, ofile_name;
     Countries m_countries;
+    bool wasRead;
 
     cout << "CSV-to-XML Converter\n";
     cout << "Author: Richard Davis\n";
 
     userInput(ifile_name, ofile_name);
 
-    fileRead(ifile_name, m_countries);
+    wasRead = fileRead(ifile_name, m_countries);
+
+    if (wasRead) {
+        fileWrite(ofile_name, m_countries);
+    }
 
     return 0;
 }
@@ -69,7 +76,7 @@ void userInput(std::string &in, std::string &out) {
 }
 
 // opens input file, reads and stores values in nested structs, and then closes file
-void fileRead(std::string name, Countries &l_countries) {
+bool fileRead(std::string name, Countries &l_countries) {
     std::ifstream file;
     std::istringstream ss;
     std::string line;
@@ -78,45 +85,128 @@ void fileRead(std::string name, Countries &l_countries) {
     std::string tempCode;
     int i = 0;
     int j = 0;
+    int charIndex;
+    int secondIndex;
+    std::string tempString;
     bool first = true;
 
     file.open(name.c_str());
     if (!file) {
         cout << "Unable to open the input file!\n";
         cout << "Check if the file exists and that you have read permissions.\n";
+        return false;
     } else {
         cout << "Opening file for reading...\n";
         while (true) {
-            cout << "in the loop\n";
             getline(file, line);
+            if (line.find("&") != std::string::npos) {
+                charIndex = line.find("&");
+                tempString = line.substr(charIndex+1, line.length()-1);
+                line.erase(charIndex);
+                line.insert(charIndex, "&amp;");
+                line.insert(line.length(), tempString);
+                secondIndex = line.find_last_of("&");
+                if (secondIndex != charIndex) {
+                    tempString = line.substr(secondIndex+1, line.length()-1);
+                    line.erase(secondIndex);
+                    line.insert(secondIndex, "&amp;");
+                    line.insert(line.length(), tempString);
+                }
+            }
+            if (line.find("\"") != std::string::npos) {
+                charIndex = line.find("\"");
+                tempString = line.substr(charIndex+1, line.length()-1);
+                line.erase(charIndex);
+                line.insert(charIndex, "&quot;");
+                line.insert(line.length(), tempString);
+                secondIndex = line.find_last_of("\"");
+                if (secondIndex != charIndex) {
+                    tempString = line.substr(secondIndex+1, line.length()-1);
+                    line.erase(secondIndex);
+                    line.insert(secondIndex, "&quot;");
+                    line.insert(line.length(), tempString);
+                }
+            } 
+            if (line.find("<") != std::string::npos) {
+                charIndex = line.find("<");
+                tempString = line.substr(charIndex+1, line.length()-1);
+                line.erase(charIndex);
+                line.insert(charIndex, "&lt;");
+                line.insert(line.length(), tempString);
+                secondIndex = line.find_last_of("<");
+                if (secondIndex != charIndex) {
+                    tempString = line.substr(secondIndex+1, line.length()-1);
+                    line.erase(secondIndex);
+                    line.insert(secondIndex, "&lt;");
+                    line.insert(line.length(), tempString);
+                }
+            } 
+            if (line.find(">") != std::string::npos) {
+                charIndex = line.find(">");
+                tempString = line.substr(charIndex+1, line.length()-1);
+                line.erase(charIndex);
+                line.insert(charIndex, "&gt;");
+                line.insert(line.length(), tempString);
+                secondIndex = line.find_last_of(">");
+                if (secondIndex != charIndex) {
+                    tempString = line.substr(secondIndex+1, line.length()-1);
+                    line.erase(secondIndex);
+                    line.insert(secondIndex, "&gt;");
+                    line.insert(line.length(), tempString);
+                }
+            } 
+            if (line.find("\'") != std::string::npos) {
+                charIndex = line.find("\'");
+                tempString = line.substr(charIndex+1, line.length()-1);
+                line.erase(charIndex);
+                line.insert(charIndex, "&apos;");
+                line.insert(line.length(), tempString);
+                secondIndex = line.find_last_of("\'");
+                if (secondIndex != charIndex) {
+                    tempString = line.substr(secondIndex+1, line.length()-1);
+                    line.erase(secondIndex);
+                    line.insert(secondIndex, "&apos;");
+                    line.insert(line.length(), tempString);
+                }
+            }
             if (!file || line.length() == 0) {
                 break;
             }
             ss.clear();
             ss.str(line);
             getline(ss, testName, ',');
-            cout << testName << std::endl;
-            if (first) {
-                cout << "first time through loop\n";
+            if (first) { 
                 l_countries.countries[i].name = testName;
                 getline(ss, l_countries.countries[i].region, ',');
                 getline(ss, l_countries.countries[i].code, ',');
                 getline(ss, l_countries.countries[i].cities[j].name, ',');
                 getline(ss, l_countries.countries[i].cities[j].district, ',');
                 getline(ss, l_countries.countries[i].cities[j].population);
+                if (l_countries.countries[i].cities[j].population.length() >  3 &&  l_countries.countries[i].cities[j].population.length() < 7) {
+                    l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                } else if (l_countries.countries[i].cities[j].population.length() >  6 &&  l_countries.countries[i].cities[j].population.length() < 10){
+                    l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                    l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-7, ",");
+                }
+                l_countries.countryCount = 1;
+                l_countries.countries[i].cityCount = 1;
                 first = false;
-            } else {
-                cout << "not the first time\n";
-                if (testName.compare(l_countries.countries[i].name) == 0) {
-                    cout << "same country as previous\n";
+            } else { 
+                if (testName.compare(l_countries.countries[i].name) == 0) { // if country is same as previous
                     j++;
                     getline(ss, tempRegion, ',');
                     getline(ss, tempCode, ',');
                     getline(ss, l_countries.countries[i].cities[j].name, ',');
                     getline(ss, l_countries.countries[i].cities[j].district, ',');
-                    getline(ss, l_countries.countries[i].cities[j].population);                    
-                } else {
-                    cout << "different country\n";
+                    getline(ss, l_countries.countries[i].cities[j].population);
+                    if (l_countries.countries[i].cities[j].population.length() >  3 &&  l_countries.countries[i].cities[j].population.length() < 7) {
+                    l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                    } else if (l_countries.countries[i].cities[j].population.length() >  6 &&  l_countries.countries[i].cities[j].population.length() < 10){
+                        l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                        l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-7, ",");
+                    }
+                    l_countries.countries[i].cityCount++;                    
+                } else { // if country is different than previous country
                     i++;
                     j=0;
                     l_countries.countries[i].name = testName;
@@ -125,12 +215,21 @@ void fileRead(std::string name, Countries &l_countries) {
                     getline(ss, l_countries.countries[i].cities[j].name, ',');
                     getline(ss, l_countries.countries[i].cities[j].district, ',');
                     getline(ss, l_countries.countries[i].cities[j].population);
+                    if (l_countries.countries[i].cities[j].population.length() >  3 &&  l_countries.countries[i].cities[j].population.length() < 7) {
+                    l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                    } else if (l_countries.countries[i].cities[j].population.length() >  6 &&  l_countries.countries[i].cities[j].population.length() < 10){
+                        l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-3, ",");
+                        l_countries.countries[i].cities[j].population.insert(l_countries.countries[i].cities[j].population.length()-7, ",");
+                    }
+                    l_countries.countryCount++;
+                    l_countries.countries[i].cityCount = 1;
                 }
             }
         } // end while loop
+        cout << "The input file has been successfully parsed.\n\n";
+        file.close();
+        return true;
     }
-    file.close();
-    cout << "The input file has been successfully parsed.\n\n";
 }
 
 // opens/creates output file, uses for loops to traverse structs as it writes xml to file, and then closes file
@@ -144,19 +243,23 @@ void fileWrite(std::string name, Countries l_countries) {
         cout << "Opening file for writing...\n";
         file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         file << "<!-- Processed by Richard Davis’s converter -->\n";
-        file << "<countries>\n";
-        file << "\t<country>\n";
-        file << "\t\t<name>\n";
-        file << "\t\t<code>\n";
-        file << "\t\t<region>\n";
-        file << "\t\t<city>\n";
-        file << "\t\t\t<name></name>\n";
-        file << "\t\t\t<district></district>\n";
-        file << "\t\t\t<population></population>\n";
-        file << "\t\t</city>\n";
-        file << "\t<country>\n";
+        file << "<countries xmlns:country-data=\"http://library.smalltown.us/country\" xmlns:city-data=\"http://library.smalltown.us/city\">\n";
+        for (int i = 0; i < l_countries.countryCount; i++) {
+            file << "\t<country-data:country>\n";
+            file << "\t\t<country-data:name>" << l_countries.countries[i].name << "</country-data:name>\n";
+            file << "\t\t<country-data:region>" << l_countries.countries[i].region << "</country-data:region>\n";
+            file << "\t\t<country-data:code>" << l_countries.countries[i].code << "</country-data:code>\n";
+            for (int j = 0; j < l_countries.countries[i].cityCount; j++) {
+                file << "\t\t<city-data:city>\n";
+                file << "\t\t\t<city-data:name>" << l_countries.countries[i].cities[j].name << "</city-data:name>\n";
+                file << "\t\t\t<city-data:district>" << l_countries.countries[i].cities[j].district << "</city-data:district>\n";
+                file << "\t\t\t<city-data:population>" << l_countries.countries[i].cities[j].population << "</city-data:population>\n";
+                file << "\t\t</city-data:city>\n";
+            }
+            file << "\t</country-data:country>\n";
+        }
         file << "</countries>";
+        cout << "The input file has been converted to an XML document.\n";
     }
     file.close();
-    cout << "The input file has been converted to an XML document.\n";
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Processed by Richard Davis’s converter -->
+<countries xmlns:country-data="http://library.smalltown.us/country" xmlns:city-data="http://library.smalltown.us/city">
+	<country-data:country>
+		<country-data:name>Denmark</country-data:name>
+		<country-data:region>Nordic Countries</country-data:region>
+		<country-data:code>DNK</country-data:code>
+		<city-data:city>
+			<city-data:name>Aalborg</city-data:name>
+			<city-data:district>Nordjylland</city-data:district>
+			<city-data:population>161,161</city-data:population>
+		</city-data:city>
+		<city-data:city>
+			<city-data:name>Odense</city-data:name>
+			<city-data:district>Fyn</city-data:district>
+			<city-data:population>183,912</city-data:population>
+		</city-data:city>
+		<city-data:city>
+			<city-data:name>Frederiksberg</city-data:name>
+			<city-data:district>Frederiksberg</city-data:district>
+			<city-data:population>90,327</city-data:population>
+		</city-data:city>
+	</country-data:country>
+	<country-data:country>
+		<country-data:name>Djibouti</country-data:name>
+		<country-data:region>Eastern Africa</country-data:region>
+		<country-data:code>DJI</country-data:code>
+		<city-data:city>
+			<city-data:name>Djibouti</city-data:name>
+			<city-data:district>Djibouti</city-data:district>
+			<city-data:population>383,000</city-data:population>
+		</city-data:city>
+	</country-data:country>
+	<country-data:country>
+		<country-data:name>Dominica</country-data:name>
+		<country-data:region>Caribbean</country-data:region>
+		<country-data:code>DMA</country-data:code>
+		<city-data:city>
+			<city-data:name>Roseau</city-data:name>
+			<city-data:district>St George</city-data:district>
+			<city-data:population>16,243</city-data:population>
+		</city-data:city>
+	</country-data:country>
+	<country-data:country>
+		<country-data:name>Dominican Republic</country-data:name>
+		<country-data:region>Caribbean</country-data:region>
+		<country-data:code>DOM</country-data:code>
+		<city-data:city>
+			<city-data:name>Santiago de los Caballeros</city-data:name>
+			<city-data:district>Santiago</city-data:district>
+			<city-data:population>365,463</city-data:population>
+		</city-data:city>
+		<city-data:city>
+			<city-data:name>San Felipe de Puerto Plata</city-data:name>
+			<city-data:district>Puerto Plata</city-data:district>
+			<city-data:population>89,423</city-data:population>
+		</city-data:city>
+	</country-data:country>
+</countries>
