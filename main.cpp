@@ -10,8 +10,6 @@ This program converts a legacy csv file to an XML document
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <limits>
 #include <sstream>
 
 using std::cout;
